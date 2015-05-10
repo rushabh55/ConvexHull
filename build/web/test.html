@@ -1,8 +1,10 @@
 <html>
     <head>
         <title>Convex Hull</title>
+        <link rel="stylesheet" type="text/css" href="css/Bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/Theme.css">
 
-        <script type="text/javascript">
+        <script type="text/javascript" async>
             var arrayX = [];
             var arrayY = [];
             var outputX = [];
@@ -107,7 +109,7 @@
                     }
                 }
                 console.log(" array wala string  " + name);
-                var url = "http://localhost:8080/restdemo1/webresources/Test/" + name;
+                var url = "http://localhost:8080/ConvexHull/webresources/Test/" + name;
                 xmlhttp.open('GET', url, true);
                 xmlhttp.send(null);
                 xmlhttp.onreadystatechange = function () {
@@ -170,7 +172,7 @@
                     }
                 }
                 console.log(" array wala string  " + name);
-                var url = "http://localhost:8080/restdemo1/webresources/Test/" + name;
+                var url = "http://localhost:8080/ConvexHull/webresources/Test/" + name;
                 xmlhttp.open('GET', url, true);
                 xmlhttp.send(null);
                 xmlhttp.onreadystatechange = function () {
@@ -275,7 +277,7 @@
                 }
                 xmlhttp = new XMLHttpRequest();
 
-                var url = "http://localhost:8080/restdemo1/webresources/Test/" + name;
+                var url = "http://localhost:8080/ConvexHull/webresources/Test/" + name;
                 xmlhttp.open('GET', url, true);
                 xmlhttp.send(null);
                 xmlhttp.onreadystatechange = OnReadLine;
@@ -397,7 +399,7 @@
                     }
                 }
                 xmlhttp = new XMLHttpRequest();
-                var url = "http://localhost:8080/restdemo1/webresources/Test/" + name;
+                var url = "http://localhost:8080/ConvexHull/webresources/Test/" + name;
                 xmlhttp.open('GET', url, true);
                 xmlhttp.send(null);
                 xmlhttp.onreadystatechange = function () {
@@ -560,8 +562,14 @@
                             arrayX2[t] = xyPts[0];
                             arrayY2[t] = xyPts[1];
                         }
-                        draw();
-                    }
+                        for(var t=0;t<size;t++)
+                        {
+                             ctx.strokeRect(arrayX[t], arrayY[t], 1, 1); 
+                             ctx2.strokeRect(arrayX[t], arrayY[t], 1, 1); 
+                             
+                        }
+//                        draw();
+                    };
                     reader.readAsText(file);
                     document.getElementById('fileSize').innerHTML = 'Size: ' + fileSize;
                     document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
