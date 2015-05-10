@@ -281,7 +281,7 @@
                 xmlhttp.onreadystatechange = OnReadLine;
 
 
-                timer = setInterval(OnReadLine, 3000);
+                timer = setInterval(OnReadLine, 1000);
             }
             ;
 
@@ -352,7 +352,7 @@
                         line--;
                     }
                 }
-                timer = setInterval(OnReadLine, 1000);
+        
                 if (line == -1)
                     clearInterval(timer);
 
