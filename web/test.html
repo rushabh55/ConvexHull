@@ -1,0 +1,646 @@
+<html>
+    <head>
+        <title>Convex Hull</title>
+
+        <script type="text/javascript">
+            var arrayX = [];
+            var arrayY = [];
+            var outputX = [];
+            var outputY = [];
+            var outputXI = [];
+            var outputYI = [];
+            var preX = [];
+            var preY = [];
+            var canvas, ctx, flag = false,
+                    prevX = 0,
+                    currX = 0,
+                    prevY = 0,
+                    currY = 0,
+                    dot_flag = false;
+            var x = "black",
+                    y = 2;
+            var arrayX2 = [];
+            var arrayY2 = [];
+            var outputX2 = [];
+            var outputY2 = [];
+            var outputXI2 = [];
+            var outputYI2 = [];
+            var preX2 = [];
+            var preY2 = [];
+            var canvas2, ctx2, flag2 = false,
+                    prevX2 = 0,
+                    currX2 = 0,
+                    prevY2 = 0,
+                    currY2 = 0,
+                    dot_flag2 = false;
+            var x2 = "black",
+                    y2 = 2;
+            function init() {
+                canvas = document.getElementById('can');
+                ctx = canvas.getContext("2d");
+                w = canvas.width;
+                h = canvas.height;
+                canvas.addEventListener("mousedown", function (e) {
+                    findxy('down', e)
+                }, false);
+                canvas.addEventListener("mouseup", function (e) {
+                    findxy('up', e)
+                }, false);
+                canvas2 = document.getElementById('can2');
+                ctx2 = canvas2.getContext("2d");
+                w2 = canvas2.width;
+                h2 = canvas2.height;
+                canvas2.addEventListener("mousedown", function (e) {
+                    findxy2('down', e)
+                }, false);
+                canvas2.addEventListener("mouseup", function (e) {
+                    findxy2('up', e)
+                }, false);
+            }
+
+
+            function draw() {
+                ctx.strokeRect(currX, currY, 1, 1);
+                arrayX.push(currX);
+                arrayY.push(currY);
+                ctx.closePath();
+            }
+
+            function draw2() {
+
+                ctx2.strokeRect(currX2, currY2, 1, 1);
+                arrayX2.push(currX2);
+                arrayY2.push(currY2);
+                ctx2.closePath();
+            }
+
+            function erase() {
+
+                ctx.clearRect(0, 0, w, h);
+                document.getElementById("canvasimg").style.display = "none";
+                arrayX = [];
+                arrayY = [];
+                outputX = [];
+                outputY = [];
+            }
+
+            function erase2() {
+
+                ctx2.clearRect(0, 0, w, h);
+                document.getElementById("canvasimg2").style.display = "none";
+                arrayX2 = [];
+                arrayY2 = [];
+                outputX2 = [];
+                outputY2 = [];
+            }
+
+            function printLines()
+            {
+                var xmlhttp;
+                var name = "";
+                xmlhttp = new XMLHttpRequest();
+                for (var i = 0; i < arrayX.length; i++) {
+                    if (i == arrayX.length - 1) {
+                        name += (arrayX[i] + " " + arrayY[i]);
+                    } else {
+                        name += (arrayX[i] + " " + arrayY[i] + ",");
+                    }
+                }
+                console.log(" array wala string  " + name);
+                var url = "http://localhost:8080/restdemo1/webresources/Test/" + name;
+                xmlhttp.open('GET', url, true);
+                xmlhttp.send(null);
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == 4) {
+                        if (xmlhttp.status == 200) {
+                            var name = xmlhttp.responseText;
+                            var x = null, y = null;
+                            console.log(name);
+                            var n = (name.split(',').length - 1);
+                            console.log("Mai hu nnnnn " + n);
+                            for (var i = 0; i <= n; i++)
+                            {
+                                var n1 = name.indexOf(" ");
+                                var s = name.indexOf(",");
+                                var string = name.substring(0, n1);
+                                console.log("String " + string);
+                                x = string;
+                                if (i == n) {
+                                    console.log("if mai aaya " + (n1 + 1) + "name " + name.length)
+                                    y = name.substring((n1 + 1), name.length);
+                                    console.log("if wala yy  " + y);
+                                    outputY.push(y);
+                                }
+                                else {
+                                    y = name.substring((n1 + 1), s);
+                                    outputY.push(y);
+                                }
+                                outputX.push(x);
+                                console.log(x + " " + y);
+                                name = name.substring(s + 1, name.length);
+                            }
+                            ctx.beginPath();
+                            ctx.moveTo(outputX[0], outputY[0]);
+                            for (var i = 1; i < outputX.length; i++)
+                            {
+                                ctx.lineTo(outputX[i], outputY[i]);
+                            }
+                            ctx.lineTo(outputX[0], outputY[0]);
+                            ctx.stroke();
+                        }
+                        else
+                            alert("Error ->" + xmlhttp.responseText);
+                    }
+                };
+            }
+
+
+
+            function brute() {
+                var dataURL = canvas2.toDataURL();
+                document.getElementById("canvasimg").src = dataURL;
+                var xmlhttp;
+                var name = "";
+                xmlhttp = new XMLHttpRequest();
+                for (var i = 0; i < arrayX2.length; i++) {
+                    if (i == arrayX2.length - 1) {
+                        name += (arrayX2[i] + " " + arrayY2[i]);
+                    } else {
+                        name += (arrayX2[i] + " " + arrayY2[i] + ",");
+                    }
+                }
+                console.log(" array wala string  " + name);
+                var url = "http://localhost:8080/restdemo1/webresources/Test/" + name;
+                xmlhttp.open('GET', url, true);
+                xmlhttp.send(null);
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == 4) {
+                        if (xmlhttp.status == 200) {
+                            var name = xmlhttp.responseText;
+                            var x = null, y = null;
+                            console.log(name);
+                            var n = (name.split(',').length - 1);
+                            console.log("Mai hu nnnnn " + n);
+                            for (var i = 0; i <= n; i++)
+                            {
+                                var n1 = name.indexOf(" ");
+                                var s = name.indexOf(",");
+                                var string = name.substring(0, n1);
+                                console.log("String " + string);
+                                x = string;
+                                if (i == n) {
+                                    console.log("if mai aaya " + (n1 + 1) + "name " + name.length)
+                                    y = name.substring((n1 + 1), name.length);
+                                    console.log("if wala yy  " + y);
+                                    outputY2.push(y);
+                                }
+                                else {
+                                    y = name.substring((n1 + 1), s);
+                                    outputY2.push(y);
+                                }
+                                outputX2.push(x);
+                                console.log(x + " " + y);
+                                name = name.substring(s + 1, name.length);
+                            }
+                            ctx2.beginPath();
+                            ctx2.moveTo(outputX2[0], outputY2[0]);
+                            for (var i = 1; i < outputX2.length; i++)
+                            {
+                                ctx2.lineTo(outputX2[i], outputY2[i]);
+                            }
+                            ctx2.lineTo(outputX2[0], outputY2[0]);
+                            ctx2.stroke();
+                        }
+                        else
+                            alert("Error ->" + xmlhttp.responseText);
+                    }
+                };
+            }
+
+            function remove1() {
+                var x = arrayX[arrayX.length - 1];
+                var y = arrayY[arrayY.length - 1];
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(x, y, 15, 15);
+                arrayX.length -= 1;
+                arrayY.length -= 1;
+            }
+
+            function remove2() {
+                var x2 = arrayX2[arrayX2.length - 1];
+                var y2 = arrayY2[arrayY2.length - 1];
+                ctx2.fillStyle = "#ffffff";
+                ctx2.fillRect(x2, y2, 15, 15);
+                arrayX2.length -= 1;
+                arrayY2.length -= 1;
+            }
+
+
+
+
+            function save() {
+                for (var i = 0; i < arrayX.length; i++)
+                    ctx2.strokeRect(arrayX[i], arrayY[i], 1, 1);
+                arrayX2 = arrayX;
+                arrayY2 = arrayY;
+            }
+
+            function save2() {
+                for (var i = 0; i < arrayX2.length; i++)
+                    ctx.strokeRect(arrayX2[i], arrayY2[i], 1, 1);
+                arrayX = arrayX2;
+                arrayY = arrayY2;
+            }
+
+
+            function showArray() {
+                alert("Array X " + arrayX + "\n" + "Array Y " + arrayY);
+            }
+
+            function showArray2() {
+                alert("Array X " + arrayX2 + "\n" + "Array Y " + arrayY2);
+            }
+
+            var p1;
+            function incremental1() {
+
+                var name = "i";
+                xmlhttp = new XMLHttpRequest();
+                for (var i = 0; i < arrayX.length; i++) {
+                    if (i == arrayX.length - 1) {
+                        name += (arrayX[i] + " " + arrayY[i]);
+                    } else {
+                        name += (arrayX[i] + " " + arrayY[i] + ",");
+                    }
+                }
+                xmlhttp = new XMLHttpRequest();
+
+                var url = "http://localhost:8080/restdemo1/webresources/Test/" + name;
+                xmlhttp.open('GET', url, true);
+                xmlhttp.send(null);
+                xmlhttp.onreadystatechange = OnReadLine;
+
+
+                timer = setInterval(OnReadLine, 3000);
+            }
+            ;
+
+            var timer = null;
+            var xmlhttp = null;
+            var line = 0;
+            var name = "<3:"
+            var kuch;
+            var l_length = 0;
+            var once = false;
+            function OnReadLine() {
+                if (xmlhttp.readyState == 4) {
+                    if (xmlhttp.status == 200) {
+                        if (!once) {
+                            name = xmlhttp.responseText;
+                            line = name.split('\n').length  -1;
+                            once = true;
+                        }
+                        var x = null, y = null;
+                        var line_Length = line;
+                        var j = 0;
+                        aa = false;
+                        var l = null;
+                        if (line != 0)
+                            l = name.substring(0, name.indexOf("\n"));
+                        else
+                            l = name;
+                        l_length = l.length;
+                        l = l.trim();
+                        var n = (l.split(',').length - 1);
+                        for (var i = 0; i <= n; i++)
+                        {
+                            var n1 = l.indexOf(" ");
+                            var s = l.indexOf(",");
+                            var string = l.substring(0, n1);
+                            x = string;
+                            if (i == n && i != 0) {
+                                y = l.substring((n1 + 1), l.length);
+                                outputYI.push(y.trim());
+                            }
+                            else {
+                                y = l.substring((n1 + 1), s);
+                                outputYI.push(y.trim());
+                            }
+                            outputXI.push(x.trim());
+                            if (l.indexOf(',') != -1)
+                                l = l.substring(s + 2, l.length);
+                        }
+                        name = name.substring(l_length + 1, name.length);
+                        name = name.trim();
+                        if (preX.length != 0)
+                        {
+                            ctx.beginPath();
+                            ctx.moveTo(preX[0], preY[0]);
+                            for (var i = 1; i < preX.length; i++)
+                            {
+                                ctx.lineTo(preX[i], preY[i]);
+                            }
+                            ctx.strokeStyle = '#ffff00';
+                            preX = [];
+                            preY = [];
+                        }
+                        OnHullDraw(line);
+                        preX = outputXI;
+                        preY = outputYI;
+                        outputXI = [];
+                        outputYI = [];
+                        line--;
+                    }
+                }
+                timer = setInterval(OnReadLine, 1000);
+                if (line == -1)
+                    clearInterval(timer);
+
+            }
+            function OnHullDraw(line) {
+                ctx.beginPath();
+                ctx.moveTo(outputXI[0], outputYI[0]);
+                for (var i = 1; i < outputXI.length; i++) {
+                    ctx.lineTo(outputXI[i], outputYI[i]);
+                }
+                if(line==0)
+                    ctx.lineTo(outputXI[0], outputYI[0]);
+                console.log(name);
+                ctx.strokeStyle = '#ff0000';
+                ctx.stroke();
+            }
+
+            function plot1() {
+                ctx.moveTo(outputXI[0], outputYI[0]);
+                for (var i = 1; i < outputXI.length; i++)
+                {
+                    ctx.lineTo(outputXI[i], outputYI[i]);
+                }
+                ctx.lineTo(outputXI[0], outputYI[0]);
+                ctx.strokeStyle = '#ff0000';
+                ctx.stroke();
+                preX = outputXI;
+                preY = outputYI;
+                outputXI = [];
+                outputYI = [];
+            }
+
+            function incremental2() {
+                var xmlhttp;
+                var name = "c";
+                xmlhttp = new XMLHttpRequest();
+                for (var i = 0; i < arrayX2.length; i++) {
+                    if (i == arrayX2.length - 1) {
+                        name += (arrayX2[i] + " " + arrayY2[i]);
+                    } else {
+                        name += (arrayX2[i] + " " + arrayY2[i] + ",");
+                    }
+                }
+                xmlhttp = new XMLHttpRequest();
+                var url = "http://localhost:8080/restdemo1/webresources/Test/" + name;
+                xmlhttp.open('GET', url, true);
+                xmlhttp.send(null);
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == 4) {
+                        if (xmlhttp.status == 200) {
+                            var name = xmlhttp.responseText;
+                            console.log(name);
+                            var x = null, y = null;
+                            var line = name.split('\n').length - 1;
+                            var line_Length = line;
+                            var j = 0;
+                            while (line > 0) {
+                                aa = false;
+                                if (line != 1)
+                                    var l = name.substring(0, name.indexOf("\n"));
+                                else
+                                    var l = name;
+                                var l_length = l.length;
+                                l = l.trim();
+                                var ptsAndLine = l.split('$');
+                                console.log(l);
+                                console.log(ptsAndLine);
+                                var checkLine = ptsAndLine[1].split(','); /// change
+
+                                var n = (ptsAndLine[0].split(',').length - 1);
+                                var xy = checkLine[0].split(' ');
+                                var xy2 = checkLine[1].split(' ');
+                                ctx2.beginPath();
+                                // [0][0] dega 1st ka
+                                ctx2.moveTo(xy[0], xy[1]);
+                                ctx2.lineTo(xy2[0], xy2[1]);
+                                //   ctx.lineTo(preX[0], preY[0]);
+                                ctx2.strokeStyle = '#ffff00';
+                                ctx2.stroke();
+                                console.log(checkLine[0]);
+                                console.log(checkLine[1]);
+                                console.log(ptsAndLine[0]);
+                                console.log(n);
+                                for (var i = 0; i <= n; i++)
+                                {
+                                    var n1 = ptsAndLine[0].indexOf(" ");
+                                    var s = ptsAndLine[0].indexOf(",");
+                                    var string = ptsAndLine[0].substring(0, n1);
+                                    x = string;
+                                    if (i === n && i !== 0) {
+                                        y = ptsAndLine[0].substring((n1 + 1), ptsAndLine[0].length);
+                                        outputYI2.push(y.trim());
+                                    }
+                                    else {
+                                        y = ptsAndLine[0].substring((n1 + 1), s);
+                                        outputYI2.push(y.trim());
+                                    }
+                                    outputXI2.push(x.trim());
+                                    if (ptsAndLine[0].indexOf(',') !== -1)
+                                        ptsAndLine[0] = ptsAndLine[0].substring(s + 2, ptsAndLine[0].length);
+                                }
+                                name = name.substring(l_length + 1, name.length);
+                                name = name.trim();
+                                if (preX2.length !== 0)
+                                {
+                                    ctx2.beginPath();
+                                    ctx2.moveTo(preX2[0], preY2[0]);
+                                    for (var i = 1; i < preX2.length; i++)
+                                    {
+                                        ctx2.lineTo(preX2[i], preY2[i]);
+                                    }
+                                    //   ctx.lineTo(preX[0], preY[0]);
+                                    ctx2.strokeStyle = '#ffff00';
+                                    ctx2.stroke();
+                                    preX2 = [];
+                                    preY2 = [];
+                                }
+                                ctx2.beginPath();
+                                ctx2.moveTo(outputXI2[0], outputYI2[0]);
+                                for (var i = 1; i < outputXI2.length; i++)
+                                {
+                                    ctx.lineTo(outputXI2[i], outputYI2[i]);
+                                }
+
+                                line--;
+                            }
+                        }
+                    }
+                };
+            }
+            ;
+            function findxy(res, e) {
+                if (res === 'down') {
+//                    prevX = currX;
+//                    prevY = currY;
+//                    currX = e.clientX - canvas.offsetLeft;
+//                    currY = e.clientY - canvas.offsetTop;
+                    flag = true;
+                    dot_flag = true;
+                    if (dot_flag) {
+                        ctx.beginPath();
+                        ctx.fillStyle = x;
+                        ctx.fillRect(currX, currY, 2, 2);
+                        ctx.closePath();
+                        dot_flag = false;
+                    }
+                }
+                if (res === 'up') {
+                    if (flag) {
+                        prevX = currX;
+                        prevY = currY;
+                        currX = e.clientX - canvas.offsetLeft;
+                        currY = e.clientY - canvas.offsetTop;
+                        draw();
+                    }
+                }
+            }
+
+
+            function findxy2(res, e) {
+                if (res === 'down') {
+//                    prevX2 = currX2;
+//                    prevY2 = currY2;
+//                    currX2 = e.clientX - canvas2.offsetLeft;
+//                    currY2 = e.clientY - canvas2.offsetTop;
+                    flag2 = true;
+                    dot_flag2 = true;
+                    if (dot_flag2) {
+                        ctx2.beginPath();
+                        ctx2.fillStyle = x;
+                        ctx2.fillRect(currX2, currY2, 2, 2);
+                        ctx2.closePath();
+                        dot_flag2 = false;
+                    }
+                }
+                if (res === 'up') {
+                    if (flag2) {
+                        prevX2 = currX2;
+                        prevY2 = currY2;
+                        currX2 = e.clientX - canvas2.offsetLeft;
+                        currY2 = e.clientY - canvas2.offsetTop;
+                        draw2();
+                    }
+                }
+            }
+            function fileSelected(event) {
+                var file = document.getElementById('fileToUpload').files[0];
+                if (file) {
+                    var fileSize = 0;
+                    if (file.size > 1024 * 1024)
+                        fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+                    else
+                        fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+                    var reader = new FileReader();
+                    reader.onload = function () {
+                        document.getElementById('fileName').innerHTML = this.result;
+                        event.preventDefault();
+                        var pts = this.result.split('\n');
+                        var size = pts.length;
+                        console.log(size);
+                        for (var t = 0; t < size; t++) {
+                            var xyPts = pts[t].split(' ');
+                            arrayX[t] = xyPts[0];
+                            arrayY[t] = xyPts[1];
+                            arrayX2[t] = xyPts[0];
+                            arrayY2[t] = xyPts[1];
+                        }
+                        draw();
+                    }
+                    reader.readAsText(file);
+                    document.getElementById('fileSize').innerHTML = 'Size: ' + fileSize;
+                    document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
+                    event.preventDefault();
+                }
+            }
+            ;
+            function download(filename, text) {
+                var pom = document.createElement('a');
+                for (var i = 0; i < outputX.length; i++) {
+//                    console.log(outputX[i]);
+//                    console.log(outputY[i]);
+                    text = text + '' + outputX[i] + ' ' + outputY[i] + '\n';
+                }
+                console.log(text);
+                pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                pom.setAttribute('download', filename);
+
+                pom.style.display = 'none';
+                document.body.appendChild(pom);
+                pom.click();
+                document.body.removeChild(pom);
+            }
+            ;</script>
+    </head>
+    <body background="back.jpg" onload="init()">
+        <h2 style="color:#ffffff; position:absolute;top:2%;left:10%;">Graham Scan</h2>
+        <h2 id="bf" style="color:#ffffff; position:absolute;top:2%;left:52%;">Brute Force</h2>
+
+        <canvas id="can" width="400" height="400" style=";background-color: #ffffff;position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
+        <canvas id="can2" width="400" height="400" style=";background-color: #ffffff;position:absolute;top:10%;left:52%;border:2px solid;"></canvas>
+
+        <img id="canvasimg" style="position:absolute;top:10%;left:52%;display:none;"><br><br>
+
+        <img id="canvasimg2" style="position:absolute;top:10%;left:52%;display:none;"><br><br>
+
+        <input type="button" value="save" id="btn" size="30" onclick="save()" style="position:absolute;top:55%;left:10%;margin-top: 120px;">
+
+        <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="position:absolute;top:55%;left:15%;margin-top:120px;">
+
+        <input type="button" value="Remove"  onclick="remove1();" style="position:absolute;top:55%;left:20%;margin-top: 120px;
+               ">
+        <input type="button" value="Show Arrays" onclick="showArray();" style="position:absolute;top:55%;left:27%;margin-top: 120px;
+               ">
+        <input type="button" value="Graham Scan" onclick="printLines();" style="position:absolute;top:55%;left:35%;margin-top: 120px;
+               "> 
+        <input type="button" value="Graham Scan Incremental" onclick="incremental1();" style="position:absolute;top:65%;left:20%;margin-top: 120px;
+               ">
+        <input type="button" id="brute" value="Brute Force" onclick="brute();" style="position:absolute;top:55%;left:55%;margin-top: 120px;display:none
+               "> 
+        <input type="button" id="bruteI" value="Brute Force Incremental" onclick="incremental1();" style="position:absolute;top:55%;left:65%;margin-top: 120px;display:none
+               ">        
+        <input type="button" value="save" id="btn2" size="30" onclick="save2()" style="position:absolute;top:55%;left:52%;margin-top: 120px;">
+
+        <input type="button" value="clear" id="clr2" size="23" onclick="erase2()" style="position:absolute;top:55%;left:57%;margin-top:120px;">
+
+        <input type="button" value="Remove"  onclick="remove2();" style="position:absolute;top:55%;left:63%;margin-top: 120px;
+               ">
+        <input type="button" value="Show Arrays" onclick="showArray2();" style="position:absolute;top:55%;left:70%;margin-top: 120px;
+               ">
+        <input type="button" value="Brute Force" onclick="brute();" style="position:absolute;top:55%;left:78%;margin-top: 120px;
+               "> 
+        <input type="button" value="Brute Force Incremental" onclick="incremental2();" style="position:absolute;top:65%;left:78%;margin-top: 120px;
+               ">
+
+        <input type="button" id="bruteI" value="Brute Force Incremental" onclick="incremental1();" style="position:absolute;top:55%;left:88%;margin-top: 120px;display:none
+               ">
+
+        <div class="row" style="position:absolute;top:70%;left:10%;margin-top: 120px;" >
+            <label for="fileToUpload">Select a File to Upload</label><br />
+            <input type="file" name="fileToUpload" id="fileToUpload" />
+            <input type="button" value="upload" onclick="fileSelected(event);">
+        </div>
+        <div id="fileName" style="color:white; position:absolute;top:75%;left:40%;margin-top: 120px;"></div>
+        <div id="fileSize" style="color:white; position:absolute;top:70%;left:50%;margin-top: 120px;"></div>
+        <div id="fileType" style="color:white; position:absolute;top:70%;left:60%;margin-top: 120px;"></div>
+        <div id="progressNumber" style="color:white; position:absolute;top:70%;left:70%;margin-top: 120px;"></div>
+
+        <input type="button" id="export" value="Export Output Points" onclick="download('output.txt', '');" style="position:absolute;top:73%;left:50%;margin-top: 120px;">
+
+    </body>
+</html> 
