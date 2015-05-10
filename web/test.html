@@ -263,7 +263,14 @@
                 alert("Array X " + arrayX2 + "\n" + "Array Y " + arrayY2);
             }
 
-            var p1;
+
+            var timer = null;
+            var xmlhttp = null;
+            var line = 0;
+            var name = "<3:";
+            var l_length = 0;
+            var once = false;
+
             function incremental1() {
 
                 var name = "i";
@@ -287,19 +294,13 @@
             }
             ;
 
-            var timer = null;
-            var xmlhttp = null;
-            var line = 0;
-            var name = "<3:"
-            var kuch;
-            var l_length = 0;
-            var once = false;
+
             function OnReadLine() {
                 if (xmlhttp.readyState == 4) {
                     if (xmlhttp.status == 200) {
                         if (!once) {
                             name = xmlhttp.responseText;
-                            line = name.split('\n').length  -1;
+                            line = name.split('\n').length - 1;
                             once = true;
                         }
                         var x = null, y = null;
@@ -354,7 +355,7 @@
                         line--;
                     }
                 }
-        
+
                 if (line == -1)
                     clearInterval(timer);
 
@@ -365,26 +366,156 @@
                 for (var i = 1; i < outputXI.length; i++) {
                     ctx.lineTo(outputXI[i], outputYI[i]);
                 }
-                if(line==0)
+                if (line == 0)
                     ctx.lineTo(outputXI[0], outputYI[0]);
                 console.log(name);
                 ctx.strokeStyle = '#ff0000';
                 ctx.stroke();
             }
 
-            function plot1() {
-                ctx.moveTo(outputXI[0], outputYI[0]);
-                for (var i = 1; i < outputXI.length; i++)
-                {
-                    ctx.lineTo(outputXI[i], outputYI[i]);
+
+
+
+            var timer2 = null;
+            var xmlhttp2 = null;
+            var line2 = 0;
+            var name2 = "<3:";
+            var l_length2 = 0;
+            var once2 = false;
+            function incremental2N() {
+
+                var name = "c";
+                xmlhttp2 = new XMLHttpRequest();
+                for (var i = 0; i < arrayX2.length; i++) {
+                    if (i == arrayX2.length - 1) {
+                        name += (arrayX2[i] + " " + arrayY2[i]);
+                    } else {
+                        name += (arrayX2[i] + " " + arrayY2[i] + ",");
+                    }
                 }
-                ctx.lineTo(outputXI[0], outputYI[0]);
-                ctx.strokeStyle = '#ff0000';
-                ctx.stroke();
-                preX = outputXI;
-                preY = outputYI;
-                outputXI = [];
-                outputYI = [];
+                xmlhttp2 = new XMLHttpRequest();
+
+                var url = "http://localhost:8080/ConvexHull/webresources/Test/" + name;
+                xmlhttp2.open('GET', url, true);
+                xmlhttp2.send(null);
+                xmlhttp2.onreadystatechange = OnReadLine2;
+
+                timer2 = setInterval(OnReadLine2, 1000);
+            }
+            ;
+            var ready = [];
+
+            function OnReadLine2() {
+                var linesNlines;
+
+                var linesSelected;
+
+
+                if (xmlhttp2.readyState == 4) {
+                    if (xmlhttp2.status == 200) {
+                        if (!once2) {
+                            name2 = xmlhttp2.responseText;
+
+                            line2 = name2.split('\n').length - 1;
+                            once2 = true;
+                        }
+
+                        var x = null, y = null;
+                        var line_Length = line;
+                        var j = 0;
+                        aa = false;
+                        var l = null;
+                        if (line2 != 0)
+                            l = name2.substring(0, name2.indexOf("\n"));
+                        else
+                            l = name2;
+//                        fff = 
+                        if (l.length != 0) {
+
+                            linesNlines = l.split('$');
+
+                            var consider = linesNlines[1];
+
+                            var ps = consider.split(',');
+                            pt1 = ps[0].split(' ');
+                            pt2 = ps[1].split(' ');
+                        }
+//                        l=l.substring(0,)
+                        l_length2 = l.length;
+                        l = l.substring(0, l.indexOf('$'));
+                        l = l.trim();
+                        var n = (l.split(',').length - 1);
+                        for (var i = 0; i <= n; i++)
+                        {
+                            var n1 = l.indexOf(" ");
+                            var s = l.indexOf(",");
+                            var string = l.substring(0, n1);
+                            x = string;
+                            if (i == n && i != 0) {
+                                y = l.substring((n1 + 1), l.length);
+                                outputYI2.push(y.trim());
+                            }
+                            else {
+                                y = l.substring((n1 + 1), s);
+                                outputYI2.push(y.trim());
+                            }
+                            outputXI2.push(x.trim());
+
+                            l = l.substring(s + 1, l.length);
+                        }
+                        if (l_length2 != 0)
+                            name2 = name2.substring(l_length2 + 1, name2.length);
+                        name2 = name2.trim();
+//                        if (preX2.length != 0)
+//                        {
+//                            ctx2.beginPath();
+//                            ctx2.moveTo(preX2[0], preY2[0]);
+//                            for (var i = 1; i < preX2.length; i++)
+//                            {
+//                                ctx2.lineTo(preX2[i], preY2[i]);
+//                            }
+//                            ctx2.strokeStyle = '#ffff00';
+//                            preX2 = [];
+//                            preY2 = [];
+//                        }
+                        OnHullDraw2(line2);
+                        preX2 = outputXI2;
+                        preY2 = outputYI2;
+                        outputXI2 = [];
+                        outputYI2 = [];
+                        line2--;
+                    }
+                }
+
+                if (line2 == -1)
+                    clearInterval(timer2);
+
+            }
+            var pt1, pt2;
+            function OnHullDraw2(line2) {
+                ctx2.beginPath();
+
+                for (var i = 0; i < outputXI2.length; i++) {
+
+                    if (i % 2 == 0)
+                        ctx2.moveTo(outputXI2[i], outputYI2[i]);
+                    else
+                    {
+                        ctx2.lineTo(outputXI2[i], outputYI2[i]);
+                        console.log(outputXI2[i], outputYI2[i]);
+                    }
+                }
+//                if (line2 == 0)
+//                    ctx2.lineTo(outputXI2[0], outputYI2[0]);
+//                console.log(name2);
+                ctx2.closePath();
+                ctx2.strokeStyle = '#ff0000';
+                ctx2.stroke();
+                ctx2.beginPath();
+                ctx2.moveTo(pt1[0], pt1[1]);
+                ctx2.lineTo(pt2[0], pt2[1]);
+                ctx2.strokeStyle = '#ffff00';
+                ctx2.stroke();
             }
 
             function incremental2() {
@@ -562,14 +693,8 @@
                             arrayX2[t] = xyPts[0];
                             arrayY2[t] = xyPts[1];
                         }
-                        for(var t=0;t<size;t++)
-                        {
-                             ctx.strokeRect(arrayX[t], arrayY[t], 1, 1); 
-                             ctx2.strokeRect(arrayX[t], arrayY[t], 1, 1); 
-                             
-                        }
-//                        draw();
-                    };
+                        draw();
+                    }
                     reader.readAsText(file);
                     document.getElementById('fileSize').innerHTML = 'Size: ' + fileSize;
                     document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
@@ -595,47 +720,60 @@
             }
             ;</script>
     </head>
-    <body onload="init()" style="  background:url(back.jpg);">
-        
+    <body background="back.jpg" onload="init()">
         <h2 style="color:#ffffff; position:absolute;top:2%;left:10%;">Graham Scan</h2>
         <h2 id="bf" style="color:#ffffff; position:absolute;top:2%;left:52%;">Brute Force</h2>
+
         <canvas id="can" width="400" height="400" style=";background-color: #ffffff;position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
         <canvas id="can2" width="400" height="400" style=";background-color: #ffffff;position:absolute;top:10%;left:52%;border:2px solid;"></canvas>
+
         <img id="canvasimg" style="position:absolute;top:10%;left:52%;display:none;"><br><br>
+
         <img id="canvasimg2" style="position:absolute;top:10%;left:52%;display:none;"><br><br>
-        <div class="btn-info">
-            <input class="btn btn-lg btn-outline" type="button" value="save" id="btn" onclick="save()" style="position:absolute;top:55%;left:10%;margin-top: 120px;">
-            <input class="btn btn-lg btn-outline" type="button" value="clear" id="clr" onclick="erase()" style="position:absolute;top:55%;left:15%;margin-top:120px;">
-            <input class="btn btn-lg btn-outline" type="button" value="Remove" onclick="remove1();" style="position:absolute;top:55%;left:20%;margin-top: 120px;">
-            <input class="btn btn-lg btn-outline" type="button" value="Show Arrays" onclick="showArray();" style="position:absolute;top:55%;left:27%;margin-top: 120px;">
-            <input class="btn btn-lg btn-outline" type="button" value="Graham Scan" onclick="printLines();" style="position:absolute;top:55%;left:36%;margin-top: 120px;">
-            <input class="btn btn-lg btn-outline" type="button" value="Graham Scan Incremental" onclick="incremental1();" style="position:absolute;top:65%;left:20%;margin-top: 120px;">
-            <input class="btn btn-lg btn-outline" type="button" id="brute" value="Brute Force" onclick="brute();" style="position:absolute;top:55%;left:55%;margin-top: 120px;display:none">
-            <input class="btn btn-lg btn-outline" type="button" id="bruteI" value="Brute Force Incremental" onclick="incremental1();" style="position:absolute;top:55%;left:65%;margin-top: 120px;display:none
+
+        <input type="button" value="save" id="btn" size="30" onclick="save()" style="position:absolute;top:55%;left:10%;margin-top: 120px;">
+
+        <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="position:absolute;top:55%;left:15%;margin-top:120px;">
+
+        <input type="button" value="Remove"  onclick="remove1();" style="position:absolute;top:55%;left:20%;margin-top: 120px;
                ">
-            <input class="btn btn-lg btn-outline" type="button" value="save" id="btn2" onclick="save2()" style="position:absolute;top:55%;left:52%;margin-top: 120px;">
-            <input class="btn btn-lg btn-outline" type="button" value="clear" id="clr2" onclick="erase2()" style="position:absolute;top:55%;left:57%;margin-top:120px;">
-            <input class="btn btn-lg btn-outline" type="button" value="Remove" onclick="remove2();" style="position:absolute;top:55%;left:62%;margin-top: 120px;               ">
-            <input class="btn btn-lg btn-outline" type="button" value="Show Arrays" onclick="showArray2();" style="position:absolute;top:55%;left:69%;margin-top: 120px;               ">
-            <input class="btn btn-lg btn-outline" type="button" value="Brute Force" onclick="brute();" style="position:absolute;top:55%;left:78%;margin-top: 120px;               ">
-            <input class="btn btn-lg btn-outline" type="button" value="Brute Force Incremental" onclick="incremental2();" style="position:absolute;top:65%;left:60%;margin-top: 120px;               ">
-            <div class="container-fluid">
-                <div class="row" style="position:absolute;top:85%;left:10%;margin-top: 120px;">
-                    <label for="fileToUpload">Select a File to Upload</label><br />
-                    <input class="btn btn-lg btn-outline" type="file" name="fileToUpload" id="fileToUpload" />
-                    <input class="btn btn-lg btn-outline" type="button" value="upload" onclick="fileSelected(event);">
-                    <input class="btn btn-lg btn-outline" type="button" id="export" value="Export Output Points" onclick="download('output.txt', '');">
-                    <h2 class="">Convex Hull</h2>
-                    <h3>In mathematics, the convex hull or convex envelope of a set X of points in the Euclidean plane or Euclidean space is the smallest convex set that contains X. For instance, when X is a bounded subset of the plane, the convex hull may be visualized as the shape enclosed by a rubber band stretched around X.</h3>
-                </div>
-                <div class="row" style="position:absolute;top:110%;left:10%;margin-top: 120px;">
-                    <div id="fileName" style="color:white; position:absolute;top:75%;left:40%;margin-top: 120px;"></div>
-                    <div id="fileSize" style="color:white; position:absolute;top:70%;left:50%;margin-top: 120px;"></div>
-                    <div id="fileType" style="color:white; position:absolute;top:70%;left:60%;margin-top: 120px;"></div>
-                    <div id="progressNumber" style="color:white; position:absolute;top:70%;left:70%;margin-top: 120px;"></div>
-                </div>
-                
-            </div>
+        <input type="button" value="Show Arrays" onclick="showArray();" style="position:absolute;top:55%;left:27%;margin-top: 120px;
+               ">
+        <input type="button" value="Graham Scan" onclick="printLines();" style="position:absolute;top:55%;left:35%;margin-top: 120px;
+               "> 
+        <input type="button" value="Graham Scan Incremental" onclick="incremental1();" style="position:absolute;top:65%;left:20%;margin-top: 120px;
+               ">
+        <input type="button" id="brute" value="Brute Force" onclick="brute();" style="position:absolute;top:55%;left:55%;margin-top: 120px;display:none
+               "> 
+        <input type="button" id="bruteI" value="Brute Force Incremental" onclick="incremental1();" style="position:absolute;top:55%;left:65%;margin-top: 120px;display:none
+               ">        
+        <input type="button" value="save" id="btn2" size="30" onclick="save2()" style="position:absolute;top:55%;left:52%;margin-top: 120px;">
+
+        <input type="button" value="clear" id="clr2" size="23" onclick="erase2()" style="position:absolute;top:55%;left:57%;margin-top:120px;">
+
+        <input type="button" value="Remove"  onclick="remove2();" style="position:absolute;top:55%;left:63%;margin-top: 120px;
+               ">
+        <input type="button" value="Show Arrays" onclick="showArray2();" style="position:absolute;top:55%;left:70%;margin-top: 120px;
+               ">
+        <input type="button" value="Brute Force" onclick="brute();" style="position:absolute;top:55%;left:78%;margin-top: 120px;
+               "> 
+        <input type="button" value="Brute Force Incremental" onclick="incremental2N();" style="position:absolute;top:65%;left:78%;margin-top: 120px;
+               ">
+
+        <input type="button" id="bruteI" value="Brute Force Incremental" onclick="incremental1();" style="position:absolute;top:55%;left:88%;margin-top: 120px;display:none
+               ">
+
+        <div class="row" style="position:absolute;top:70%;left:10%;margin-top: 120px;" >
+            <label for="fileToUpload">Select a File to Upload</label><br />
+            <input type="file" name="fileToUpload" id="fileToUpload" />
+            <input type="button" value="upload" onclick="fileSelected(event);">
         </div>
+        <div id="fileName" style="color:white; position:absolute;top:75%;left:40%;margin-top: 120px;"></div>
+        <div id="fileSize" style="color:white; position:absolute;top:70%;left:50%;margin-top: 120px;"></div>
+        <div id="fileType" style="color:white; position:absolute;top:70%;left:60%;margin-top: 120px;"></div>
+        <div id="progressNumber" style="color:white; position:absolute;top:70%;left:70%;margin-top: 120px;"></div>
+
+        <input type="button" id="export" value="Export Output Points" onclick="download('output.txt', '');" style="position:absolute;top:73%;left:50%;margin-top: 120px;">
+
     </body>
 </html> 
