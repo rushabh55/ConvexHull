@@ -595,60 +595,47 @@
             }
             ;</script>
     </head>
-    <body background="back.jpg" onload="init()">
+    <body onload="init()" style="  background:url(back.jpg);">
+        
         <h2 style="color:#ffffff; position:absolute;top:2%;left:10%;">Graham Scan</h2>
         <h2 id="bf" style="color:#ffffff; position:absolute;top:2%;left:52%;">Brute Force</h2>
-
         <canvas id="can" width="400" height="400" style=";background-color: #ffffff;position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
         <canvas id="can2" width="400" height="400" style=";background-color: #ffffff;position:absolute;top:10%;left:52%;border:2px solid;"></canvas>
-
         <img id="canvasimg" style="position:absolute;top:10%;left:52%;display:none;"><br><br>
-
         <img id="canvasimg2" style="position:absolute;top:10%;left:52%;display:none;"><br><br>
-
-        <input type="button" value="save" id="btn" size="30" onclick="save()" style="position:absolute;top:55%;left:10%;margin-top: 120px;">
-
-        <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="position:absolute;top:55%;left:15%;margin-top:120px;">
-
-        <input type="button" value="Remove"  onclick="remove1();" style="position:absolute;top:55%;left:20%;margin-top: 120px;
+        <div class="btn-info">
+            <input class="btn btn-lg btn-outline" type="button" value="save" id="btn" onclick="save()" style="position:absolute;top:55%;left:10%;margin-top: 120px;">
+            <input class="btn btn-lg btn-outline" type="button" value="clear" id="clr" onclick="erase()" style="position:absolute;top:55%;left:15%;margin-top:120px;">
+            <input class="btn btn-lg btn-outline" type="button" value="Remove" onclick="remove1();" style="position:absolute;top:55%;left:20%;margin-top: 120px;">
+            <input class="btn btn-lg btn-outline" type="button" value="Show Arrays" onclick="showArray();" style="position:absolute;top:55%;left:27%;margin-top: 120px;">
+            <input class="btn btn-lg btn-outline" type="button" value="Graham Scan" onclick="printLines();" style="position:absolute;top:55%;left:36%;margin-top: 120px;">
+            <input class="btn btn-lg btn-outline" type="button" value="Graham Scan Incremental" onclick="incremental1();" style="position:absolute;top:65%;left:20%;margin-top: 120px;">
+            <input class="btn btn-lg btn-outline" type="button" id="brute" value="Brute Force" onclick="brute();" style="position:absolute;top:55%;left:55%;margin-top: 120px;display:none">
+            <input class="btn btn-lg btn-outline" type="button" id="bruteI" value="Brute Force Incremental" onclick="incremental1();" style="position:absolute;top:55%;left:65%;margin-top: 120px;display:none
                ">
-        <input type="button" value="Show Arrays" onclick="showArray();" style="position:absolute;top:55%;left:27%;margin-top: 120px;
-               ">
-        <input type="button" value="Graham Scan" onclick="printLines();" style="position:absolute;top:55%;left:35%;margin-top: 120px;
-               "> 
-        <input type="button" value="Graham Scan Incremental" onclick="incremental1();" style="position:absolute;top:65%;left:20%;margin-top: 120px;
-               ">
-        <input type="button" id="brute" value="Brute Force" onclick="brute();" style="position:absolute;top:55%;left:55%;margin-top: 120px;display:none
-               "> 
-        <input type="button" id="bruteI" value="Brute Force Incremental" onclick="incremental1();" style="position:absolute;top:55%;left:65%;margin-top: 120px;display:none
-               ">        
-        <input type="button" value="save" id="btn2" size="30" onclick="save2()" style="position:absolute;top:55%;left:52%;margin-top: 120px;">
-
-        <input type="button" value="clear" id="clr2" size="23" onclick="erase2()" style="position:absolute;top:55%;left:57%;margin-top:120px;">
-
-        <input type="button" value="Remove"  onclick="remove2();" style="position:absolute;top:55%;left:63%;margin-top: 120px;
-               ">
-        <input type="button" value="Show Arrays" onclick="showArray2();" style="position:absolute;top:55%;left:70%;margin-top: 120px;
-               ">
-        <input type="button" value="Brute Force" onclick="brute();" style="position:absolute;top:55%;left:78%;margin-top: 120px;
-               "> 
-        <input type="button" value="Brute Force Incremental" onclick="incremental2();" style="position:absolute;top:65%;left:78%;margin-top: 120px;
-               ">
-
-        <input type="button" id="bruteI" value="Brute Force Incremental" onclick="incremental1();" style="position:absolute;top:55%;left:88%;margin-top: 120px;display:none
-               ">
-
-        <div class="row" style="position:absolute;top:70%;left:10%;margin-top: 120px;" >
-            <label for="fileToUpload">Select a File to Upload</label><br />
-            <input type="file" name="fileToUpload" id="fileToUpload" />
-            <input type="button" value="upload" onclick="fileSelected(event);">
+            <input class="btn btn-lg btn-outline" type="button" value="save" id="btn2" onclick="save2()" style="position:absolute;top:55%;left:52%;margin-top: 120px;">
+            <input class="btn btn-lg btn-outline" type="button" value="clear" id="clr2" onclick="erase2()" style="position:absolute;top:55%;left:57%;margin-top:120px;">
+            <input class="btn btn-lg btn-outline" type="button" value="Remove" onclick="remove2();" style="position:absolute;top:55%;left:62%;margin-top: 120px;               ">
+            <input class="btn btn-lg btn-outline" type="button" value="Show Arrays" onclick="showArray2();" style="position:absolute;top:55%;left:69%;margin-top: 120px;               ">
+            <input class="btn btn-lg btn-outline" type="button" value="Brute Force" onclick="brute();" style="position:absolute;top:55%;left:78%;margin-top: 120px;               ">
+            <input class="btn btn-lg btn-outline" type="button" value="Brute Force Incremental" onclick="incremental2();" style="position:absolute;top:65%;left:60%;margin-top: 120px;               ">
+            <div class="container-fluid">
+                <div class="row" style="position:absolute;top:85%;left:10%;margin-top: 120px;">
+                    <label for="fileToUpload">Select a File to Upload</label><br />
+                    <input class="btn btn-lg btn-outline" type="file" name="fileToUpload" id="fileToUpload" />
+                    <input class="btn btn-lg btn-outline" type="button" value="upload" onclick="fileSelected(event);">
+                    <input class="btn btn-lg btn-outline" type="button" id="export" value="Export Output Points" onclick="download('output.txt', '');">
+                    <h2 class="">Convex Hull</h2>
+                    <h3>In mathematics, the convex hull or convex envelope of a set X of points in the Euclidean plane or Euclidean space is the smallest convex set that contains X. For instance, when X is a bounded subset of the plane, the convex hull may be visualized as the shape enclosed by a rubber band stretched around X.</h3>
+                </div>
+                <div class="row" style="position:absolute;top:110%;left:10%;margin-top: 120px;">
+                    <div id="fileName" style="color:white; position:absolute;top:75%;left:40%;margin-top: 120px;"></div>
+                    <div id="fileSize" style="color:white; position:absolute;top:70%;left:50%;margin-top: 120px;"></div>
+                    <div id="fileType" style="color:white; position:absolute;top:70%;left:60%;margin-top: 120px;"></div>
+                    <div id="progressNumber" style="color:white; position:absolute;top:70%;left:70%;margin-top: 120px;"></div>
+                </div>
+                
+            </div>
         </div>
-        <div id="fileName" style="color:white; position:absolute;top:75%;left:40%;margin-top: 120px;"></div>
-        <div id="fileSize" style="color:white; position:absolute;top:70%;left:50%;margin-top: 120px;"></div>
-        <div id="fileType" style="color:white; position:absolute;top:70%;left:60%;margin-top: 120px;"></div>
-        <div id="progressNumber" style="color:white; position:absolute;top:70%;left:70%;margin-top: 120px;"></div>
-
-        <input type="button" id="export" value="Export Output Points" onclick="download('output.txt', '');" style="position:absolute;top:73%;left:50%;margin-top: 120px;">
-
     </body>
 </html> 
